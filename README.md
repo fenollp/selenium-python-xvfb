@@ -1,34 +1,38 @@
-#### Useful Docker container image
+# Selenium3 + xvfb with Python3 API on docker
 
-Forked from: [khozzy/selenium-python-chrome](https://goo.gl/Fu723f)
+Forked from: [pimuzzo/selenium-python-xvfb](https://hub.docker.com/r/pimuzzo/selenium-python-xvfb/)
+Which was forked from: [khozzy/selenium-python-chrome](https://hub.docker.com/r/khozzy/selenium-python-chrome/)
+Inspiration: [SO Q&A](http://stackoverflow.com/a/6300672/1418165)
 
-#### BUILD IMAGE:
+## build
 
-You can choose between:
+Either
+* `docker build -t selenium .` (in the same path of your Dockerfile)
+* `docker pull fenollp/selenium`
 
-##### 1) Build from Dockerfile:
+## run
 
-` docker build -t selenium . ` (in the same path of your Dockerfile)
+### Play around with the test script
 
-##### 2) Pull it from docker hub:
-` docker pull pimuzzo/selenium_python_xvfb `
+```shell
+docker run --name sel -ti --rm fenollp/selenium bash
+root@c4c58976c69a:/# python3 /home/example.py
+Google
+```
 
-#### RUN CONTAINER:
+### Use container with your own data
 
-You can choose between:
-
-##### 1) Joining inside
-` docker run --name selenium -ti pimuzzo/selenium_python_xvfb bash`
-
-##### 2) Using from outside
-` docker run -ti -v /your_local_dir:/home/something pimuzzo/selenium_python_xvfb python /home/something/your_file.py `
+```shell
+docker run -ti --rm -v /your_local_dir:/home/something fenollp/selenium python3 /home/something/your_file.py
+```
 
 Optional:
-- You can specify the browser with the BROWSER environment variable
+- You can specify the browser with the `BROWSER` environment variable (defaults to `firefox`)
 
-#### EXAMPLE OF CODE WITH SELENIUM:
-```
-#!/usr/bin/env python
+## example.py
+
+```python3
+#!/usr/bin/env python3
 
 from pyvirtualdisplay import Display
 from selenium import webdriver
@@ -36,13 +40,12 @@ from selenium import webdriver
 display = Display(visible=0, size=(800, 600))
 display.start()
 
-# now Firefox will run in a virtual display. 
+# now Firefox will run in a virtual display.
 # you will not see the browser.
 browser = webdriver.Firefox()
 browser.get('http://www.google.com')
-print browser.title
+print(browser.title)
 browser.quit()
 
 display.stop()
 ```
-source: http://goo.gl/cmLS9Z
