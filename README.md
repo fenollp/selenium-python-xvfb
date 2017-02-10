@@ -15,7 +15,7 @@ Either
 ### Play around with the test script
 
 ```shell
-docker run --name sel -ti --rm fenollp/selenium bash
+docker run -ti --rm fenollp/selenium:ff52b4 bash
 root@c4c58976c69a:/# python3 /home/example.py
 Google
 ```
@@ -23,11 +23,8 @@ Google
 ### Use container with your own data
 
 ```shell
-docker run -ti --rm -v /your_local_dir:/home/something fenollp/selenium python3 /home/something/your_file.py
+docker run -ti --rm -v $PWD/example.py:/main.py fenollp/selenium:ff52b4 python3 /main.py
 ```
-
-Optional:
-- You can specify the browser with the `BROWSER` environment variable (defaults to `firefox`)
 
 ## example.py
 
@@ -43,7 +40,7 @@ display.start()
 # now Firefox will run in a virtual display.
 # you will not see the browser.
 browser = webdriver.Firefox()
-browser.get('http://www.google.com')
+browser.get('https://cacert.org') # works with self-signed certs
 print(browser.title)
 browser.quit()
 

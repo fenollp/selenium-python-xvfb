@@ -1,29 +1,30 @@
-FROM ubuntu:16.10
+FROM ubuntu:17.04
 
-ENV BROWSER firefox
 ENV DISPLAY :99
 ENV GECKOV v0.14.0
+ENV FFV 52.0~b4+build1-0ubuntu0.17.04.1
 
 #================================================
 # Installations
 #================================================
 
-RUN apt-get update && apt-get install -y $BROWSER \
+RUN apt-get update \
+    && apt-get install -y software-properties-common \
+    && add-apt-repository -y ppa:mozillateam/firefox-next \
+    && apt-get update \
+    && apt-get purge firefox \
+    && apt-get upgrade -y
+
+RUN apt-get install -y \
+        firefox=$FFV \
         build-essential libssl-dev python-setuptools \
-        vim xvfb xz-utils zlib1g-dev wget python3-pip
+        xvfb xz-utils zlib1g-dev wget python3-pip
 
 RUN pip3 install --upgrade pip
-
-RUN pip3 install selenium pyvirtualdisplay requests unittest-xml-reporting
+RUN pip3 install -U selenium pyvirtualdisplay requests unittest-xml-reporting
 
 ENV GECKO_URL https://github.com/mozilla/geckodriver/releases/download/$GECKOV/geckodriver-$GECKOV-linux64.tar.gz
 RUN wget $GECKO_URL && tar xvxf gecko* && mv geckodriver /usr/bin && chmod a+x /usr/bin/geckodriver
-
-#==================
-# Vim highlight
-#==================
-
-RUN echo 'syntax on' >>/etc/vim/vimrc
 
 #==================
 # Xvfb + init scripts
